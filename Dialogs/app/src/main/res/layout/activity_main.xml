@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btn_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnAlert" />
+
+    <Button
+        android:id="@+id/btn_datepicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnDatePicker" />
+
+    <Button
+        android:id="@+id/btn_timepicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnTimePicker" />
+
+    <Button
+        android:id="@+id/btn_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnProgress" />
+
+    <Button
+        android:id="@+id/btn_custom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnCustom" />
+
+</LinearLayout>
