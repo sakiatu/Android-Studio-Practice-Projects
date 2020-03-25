@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">InterActivityCommunication</string>
+    <string name="hint">Input String</string>
+    <string name="btnName">Goto New Activity</string>
+    <string name="noValue">No Values Found!!!</string>
+    <string name="btnNewName">Back</string>
+</resources>
