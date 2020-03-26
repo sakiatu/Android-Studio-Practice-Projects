@@ -7,26 +7,11 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/edtId"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".7"
-            android:hint="@string/hint" />
-
-        <Button
-            android:id="@+id/btnSaveId"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:layout_weight=".3"
-            android:text="@string/save" />
-    </LinearLayout>
+   <Button
+       android:id="@+id/addBtn"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="@string/add"/>
 
     <LinearLayout
         android:layout_width="match_parent"
