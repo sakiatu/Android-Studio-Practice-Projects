@@ -76,7 +76,9 @@ public class MyDialog extends DialogFragment {
     }
 
     private Dialog showDatePicker() {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), ((view, year, month, dayOfMonth) -> mt(dayOfMonth + "/" + (month + 1) + "/" + year)), 2020, 0, 1);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                ((view, year, month, dayOfMonth) -> mt(dayOfMonth + "/" + (month + 1) + "/" + year)),
+                2020, 0, 1);
         return datePickerDialog;
     }
 
