@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddAlarmActivity">
+
+
+    <include
+        android:id="@+id/toolbar_addAlarm_id"
+        layout="@layout/toolbar"/>
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_addAlarm_id"
+        android:background="@color/white"
+        android:numbersBackgroundColor="@color/white"
+        android:timePickerMode="clock"
+        android:layout_marginBottom="16dp"
+        />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white"
+        android:layout_below="@+id/timePicker">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:id="@+id/setMission_layout"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:clickable="true">
+                <TextView
+                    android:id="@+id/mission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/mission"
+                    android:textColor="@color/textColor"
+                    android:textSize="20sp"
+                    android:layout_centerVertical="true"/>
+                <ImageView
+                    android:id="@+id/missionValue_image"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_toLeftOf="@+id/missionValue_text"
+                    android:src="@drawable/icon_alarm_clock"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="24dp"/>
+                <TextView
+                    android:id="@+id/missionValue_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:text="Default"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/secondaryColor"
+                    android:textSize="18sp"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/setRingtone_layout"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:clickable="true">
+                <TextView
+                    android:id="@+id/ringtone_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="Ringtone"
+                    android:textColor="@color/textColor"
+                    android:textSize="20sp"
+                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:id="@+id/ringtoneValue_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:text="Default"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/secondaryColor"
+                    android:textSize="18sp"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/setRepeat_layout"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:clickable="true">
+                <TextView
+                    android:id="@+id/repeat_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="Repeat"
+                    android:textColor="@color/textColor"
+                    android:textSize="20sp"
+                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:id="@+id/repeatValue_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:text="Once"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/secondaryColor"
+                    android:textSize="18sp"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>
