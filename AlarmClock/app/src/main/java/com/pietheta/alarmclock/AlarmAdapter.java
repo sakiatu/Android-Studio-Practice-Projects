@@ -23,9 +23,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     AlarmDbHelper helper;
     Calendar currentTime;
 
-    public AlarmAdapter(ArrayList<AlarmItem> alarmList, Context context) {
+    public AlarmAdapter( Context context,ArrayList<AlarmItem> alarmList) {
         this.alarmList = alarmList;
         this.context = context;
+        helper = new AlarmDbHelper(context);
     }
 
     public OnItemClickListener listener;
@@ -128,7 +129,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         if (isOn) {
             currentTime = Calendar.getInstance();
             int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);//returns 24format
-            int currentMin = currentTime.get(Calendar.MINUTE);
+            int currentMin = currentTime.get(Calendar.MINUTE) + 1;
 
             int alarmHour = alarmList.get(position).getHour();
             int alarmMin = alarmList.get(position).getMinute();
@@ -150,16 +151,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
             StringBuilder builder = new StringBuilder();
             builder.append("Alarm in ");
-            if(hour==1)builder.append(hour+" hour ");
-            else if(hour>1)builder.append(hour+" hours ");
-            if(hour==0 && minute<2) builder.append("less than 1 minute");
-            else if(minute==1) builder.append(" 1 minute");
-            else if(minute!=0) builder.append(minute+" minutes");
+            if (hour == 1) builder.append(hour + " hour ");
+            else if (hour > 1) builder.append(hour + " hours ");
+            if (hour == 0 && minute < 2) builder.append("less than 1 minute");
+            else if (minute == 1) builder.append(" 1 minute");
+            else if (minute != 0) builder.append(minute + " minutes");
 
-            return builder.toString();
-        }
-        else{
-            return new AlarmDbHelper(context).getRepeatType(position);
+            return helper.getRepeatType(position) + " | " + builder.toString();
+        } else {
+            return helper.getRepeatType(position);
         }
     }
 }

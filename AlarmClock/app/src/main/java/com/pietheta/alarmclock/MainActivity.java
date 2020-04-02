@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerAlarm = findViewById(R.id.alarmItemList);
         recyclerAlarm.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        alarmAdapter = new AlarmAdapter(alarmList, this);
+        alarmAdapter = new AlarmAdapter(this,alarmList);
         recyclerAlarm.setLayoutManager(layoutManager);
         recyclerAlarm.setAdapter(alarmAdapter);
 

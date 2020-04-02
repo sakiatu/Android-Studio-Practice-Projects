@@ -11,10 +11,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -150,36 +152,49 @@ public class AddAlarmActivity extends AppCompatActivity implements BottomSheetDi
 
     private void showAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete Alarm")
-                .setMessage("Delete this Alarm?")
-                .setPositiveButton("Delete", ((dialog, which) -> {
-                    helper.deleteAlarm(position);
-                    alarmList.remove(position);
-                    alarmAdapter.notifyDataSetChanged();
-                    finish();
-                }))
-                .setNegativeButton("Cancel", ((dialog, which) -> dialog.dismiss()));
-        builder.create().show();
+        View layout = LayoutInflater.from(this).inflate(R.layout.dialog, null);
+        builder.setView(layout);
+        AlertDialog dialog =  builder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
+        TextView title = layout.findViewById(R.id.dialogTitle);
+        TextView msg = layout.findViewById(R.id.dialogMessage);
+        title.setText("Delete");
+        msg.setText("Delete Alarm?");
+
+        Button delete = layout.findViewById(R.id.discard);
+        Button cancel = layout.findViewById(R.id.cancel);
+        delete.setText("DELETE");
+        delete.setOnClickListener(v -> {
+           helper.deleteAlarm(position);
+           alarmList.remove(position);
+           alarmAdapter.notifyDataSetChanged();
+           finish();
+       });
+        cancel.setOnClickListener(v -> dialog.dismiss());
     }
 
     private void saveAlarm() {
         if (position == NEW_POSITION) {
 
             String alarmTime = getAlarmTime();
-            String missionType = "default";
+            String missionType = mission_type.getText().toString();
             String ringtone = "ringtone";
             String repeatType = repeat_type.getText().toString();
             String activeState = "true";
             int missionIcon = getImgResource();
 
-            alarmList.add(new AlarmItem(alarmTime, missionIcon, true));
             helper.addAlarm(alarmTime, missionType, ringtone, repeatType, activeState);
+            alarmList.add(new AlarmItem(alarmTime, missionIcon, true));
         } else {
             String alarmTime = getAlarmTime();
-            String missionType = helper.getMissionType(position);
+            //String missionType = helper.getMissionType(position);
+            // String repeatType = helper.getRepeatType(position);
+            String missionType = mission_type.getText().toString();
             String ringtone = helper.getRingtone(position);
-            String repeatType = helper.getRepeatType(position);
-            String activeState = helper.getActiveState(position);
+            String repeatType = repeat_type.getText().toString();
+            String activeState = "true";//update makes it true
 
             helper.updateAlarm(position, alarmTime, missionType, ringtone, repeatType, activeState);
             alarmList.remove(position);
@@ -227,12 +242,12 @@ public class AddAlarmActivity extends AppCompatActivity implements BottomSheetDi
 
         if (view.getId() == R.id.once_repeat) {
             repeat_type.setText("Once");
-            helper.updateRepeat(position, "Once");
+           // helper.updateRepeat(position, "Once");
             dialog.dismiss();
         }
         if (view.getId() == R.id.everyday_repeat) {
             repeat_type.setText("Everyday");
-            helper.updateRepeat(position, "Everyday");
+          //  helper.updateRepeat(position, "Everyday");
             dialog.dismiss();
         }
     }
