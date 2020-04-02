@@ -2,28 +2,61 @@ package com.pietheta.alarmclock;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import static com.pietheta.alarmclock.MainActivity.alarmAdapter;
+import static com.pietheta.alarmclock.MainActivity.alarmList;
 
-public class AddAlarmActivity extends AppCompatActivity {
-    public static ArrayList<AlarmItem> alarmList = new ArrayList<>();
+public class AddAlarmActivity extends AppCompatActivity implements BottomSheetDialog.OnClickListener {
 
+    AlarmDbHelper helper = new AlarmDbHelper(this);
+    public static int position;
+    public static final int NEW_POSITION = -1;
+
+    TextView mission_type, repeat_type, ringtone;
+    ImageView missionIcon;
+    BottomSheetDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
 
+        Intent intent = getIntent();
+        position = intent.getIntExtra("position", NEW_POSITION);
+        repeat_type = findViewById(R.id.repeatValue_text);
+        mission_type = findViewById(R.id.missionValue_text);
+        ringtone = findViewById(R.id.ringtoneValue_text);
+        missionIcon = findViewById(R.id.missionValue_image);
+
         setToolbar();
+        setCurrentData();
+        //buttons
+        findViewById(R.id.setMission_layout).setOnClickListener(this::onClick);
+        findViewById(R.id.setRingtone_layout).setOnClickListener(this::onClick);
+        findViewById(R.id.setRepeat_layout).setOnClickListener(this::onClick);
     }
 
     private void setToolbar() {
@@ -35,23 +68,126 @@ public class AddAlarmActivity extends AppCompatActivity {
         ImageButton done = toolbar.findViewById(R.id.done);
         cancel.setOnClickListener(this::onClick);
         done.setOnClickListener(this::onClick);
-        delete.setVisibility(View.GONE);
+        if (position == NEW_POSITION) {
+            delete.setVisibility(View.GONE);
+        } else {
+            title.setText("Edit Alarm");
+            delete.setOnClickListener(this::onClick);
+        }
     }
 
-    private void onClick(View view) {
-        if (view.getId()==R.id.done) {
+    private void setCurrentData() {
+        if (position != NEW_POSITION) {
+            setCurrentTime();
+            repeat_type.setText(helper.getRepeatType(position));
+            mission_type.setText(helper.getMissionType(position));
+            ringtone.setText(helper.getRingtone(position));
+
+            int mission_icon = alarmList.get(position).getImageResource();
+            missionIcon.setImageResource(mission_icon);
+            missionIcon.setColorFilter(this.getResources().getColor(R.color.colorAccent));
+
+        }
+    }
+
+    private void setCurrentTime() {
+        if (position != NEW_POSITION) {
+            TimePicker timePicker = findViewById(R.id.timePicker);
+
+            timePicker.setHour(alarmList.get(position).getHour());
+            timePicker.setMinute(alarmList.get(position).getMinute());
+
+        }
+    }
+
+    public void onClick(View view) {
+        if (view.getId() == R.id.done) {
             saveAlarm();
             finish();
         }
+        if (view.getId() == R.id.cancel) {
+            onBackPressed();
+        }
+        if (view.getId() == R.id.delete) {
+            showAlert();
+        }
+        if (view.getId() == R.id.setMission_layout) {
+            startActivity(new Intent(this, Missions.class));
+            // mt("set mission");
+        }
+        if (view.getId() == R.id.setRingtone_layout) {
+            mt("set ringtone");
 
+        }
+        if (view.getId() == R.id.setRepeat_layout) {
+            showBottomSheet();
+        }
     }
 
+    private void showBottomSheet() {
+
+        dialog = new BottomSheetDialog();
+        dialog.show(getSupportFragmentManager(), "repeatTypes");
+
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.repeat_bottom_sheet_dialog, null);
+        TextView once = view.findViewById(R.id.once_repeat);
+        TextView everyday = view.findViewById(R.id.everyday_repeat);
+        String type = repeat_type.getText().toString();
+
+       /*
+        switch (type) {
+            case "Once":
+                once.setTextColor(getResources().getColor(R.color.colorAccent));
+                mt("aaa");
+                break;
+            case "Everyday":
+                everyday.setTextColor(getResources().getColor(R.color.colorAccent));
+                mt("bb");
+                break;
+        }
+*/
+    }
+
+    private void showAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Alarm")
+                .setMessage("Delete this Alarm?")
+                .setPositiveButton("Delete", ((dialog, which) -> {
+                    helper.deleteAlarm(position);
+                    alarmList.remove(position);
+                    alarmAdapter.notifyDataSetChanged();
+                    finish();
+                }))
+                .setNegativeButton("Cancel", ((dialog, which) -> dialog.dismiss()));
+        builder.create().show();
+    }
 
     private void saveAlarm() {
-        int position = alarmList.size();
-        alarmList.add(new AlarmItem(getAlarmTime(),getImgResource(),true));
-        alarmAdapter.notifyItemInserted(position);
-        mt("Alarm at "+getAlarmTime());
+        if (position == NEW_POSITION) {
+
+            String alarmTime = getAlarmTime();
+            String missionType = "default";
+            String ringtone = "ringtone";
+            String repeatType = repeat_type.getText().toString();
+            String activeState = "true";
+            int missionIcon = getImgResource();
+
+            alarmList.add(new AlarmItem(alarmTime, missionIcon, true));
+            helper.addAlarm(alarmTime, missionType, ringtone, repeatType, activeState);
+        } else {
+            String alarmTime = getAlarmTime();
+            String missionType = helper.getMissionType(position);
+            String ringtone = helper.getRingtone(position);
+            String repeatType = helper.getRepeatType(position);
+            String activeState = helper.getActiveState(position);
+
+            helper.updateAlarm(position, alarmTime, missionType, ringtone, repeatType, activeState);
+            alarmList.remove(position);
+            alarmList.add(position, new AlarmItem(getAlarmTime(), getImgResource(), true));
+        }
+        alarmAdapter.notifyDataSetChanged();
+
+        mt("Alarm at " + getAlarmTime());
     }
 
     private String getAlarmTime() {
@@ -78,13 +214,48 @@ public class AddAlarmActivity extends AppCompatActivity {
         return hourString + ":" + minuteString + ext;
     }
 
-    private int getImgResource(){
+    private int getImgResource() {
         return R.drawable.icon_alarm_clock;
     }
-    private boolean isSwitchOn(){
-        return true;
-    }
-    private void mt(String message){
+
+    private void mt(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClicked(View view) {
+
+        if (view.getId() == R.id.once_repeat) {
+            repeat_type.setText("Once");
+            helper.updateRepeat(position, "Once");
+            dialog.dismiss();
+        }
+        if (view.getId() == R.id.everyday_repeat) {
+            repeat_type.setText("Everyday");
+            helper.updateRepeat(position, "Everyday");
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        View layout = LayoutInflater.from(this).inflate(R.layout.dialog, null);
+        showOnBackDialog(layout);
+        layout.findViewById(R.id.discard).setOnClickListener(v -> super.onBackPressed());
+    }
+
+    private void showOnBackDialog(View view) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        TextView title = view.findViewById(R.id.dialogTitle);
+        TextView message = view.findViewById(R.id.dialogMessage);
+        title.setText("Discard");
+        message.setText("Discard changes?");
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.show();
+        view.findViewById(R.id.cancel).setOnClickListener(v -> alertDialog.dismiss());
     }
 }

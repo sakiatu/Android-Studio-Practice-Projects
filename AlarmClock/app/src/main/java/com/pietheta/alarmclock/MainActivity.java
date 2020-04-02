@@ -1,27 +1,31 @@
 package com.pietheta.alarmclock;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import android.content.Intent;
+
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import java.util.ArrayList;
 
-import static com.pietheta.alarmclock.AddAlarmActivity.alarmList;
-
 public class MainActivity extends AppCompatActivity {
-
+    public static ArrayList<AlarmItem> alarmList = new ArrayList<>();
     private RecyclerView recyclerAlarm;
     public static AlarmAdapter alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    AlarmDbHelper helper = new AlarmDbHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setToolbar();
+        loadData();
         setList();
-
+        refreshList();
         findViewById(R.id.fab_main).setOnClickListener(v -> startActivity(new Intent(this, AddAlarmActivity.class)));
 
 
@@ -48,28 +53,74 @@ public class MainActivity extends AppCompatActivity {
         delete.setVisibility(View.GONE);
     }
 
+    public void loadData() {
+        Cursor cursor = helper.showAllData();
+        alarmList.clear();
+
+        while (cursor.moveToNext()) {
+            String time = cursor.getString(cursor.getColumnIndex(AlarmDbHelper.KEY_TIME));
+            String active = cursor.getString(cursor.getColumnIndex(AlarmDbHelper.KEY_ACTIVE));
+            String mission = cursor.getString(cursor.getColumnIndex(AlarmDbHelper.KEY_MISSION));
+
+            int mission_icon = getMissionIcon(mission);
+            boolean isOn = active.equals("true");
+
+            alarmList.add(new AlarmItem(time, mission_icon, isOn));
+        }
+
+    }
+
     private void setList() {
         recyclerAlarm = findViewById(R.id.alarmItemList);
         recyclerAlarm.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        alarmAdapter = new AlarmAdapter(alarmList);
+        alarmAdapter = new AlarmAdapter(alarmList, this);
         recyclerAlarm.setLayoutManager(layoutManager);
         recyclerAlarm.setAdapter(alarmAdapter);
 
-        alarmAdapter.setOnItemClickListener(new AlarmAdapter.OnItemclickListener() {
+        alarmAdapter.setOnItemClickListener(new AlarmAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                startActivity(new Intent(getApplicationContext(), AddAlarmActivity.class));
+                Intent intent = new Intent(getApplicationContext(), AddAlarmActivity.class);
+                intent.putExtra("position", position);
+                startActivity(intent);
             }
 
             @Override
-            public void isSwitchOn(int position) {
-                alarmList.get(position).setSwitchState();
-
+            public void onClickSwitch(int position) {
+                boolean isOn = alarmList.get(position).isSwitchOn();
+                alarmList.get(position).setSwitchState(isOn);
+                helper.updateActive(position, !isOn);
                 alarmAdapter.notifyItemChanged(position);
             }
         });
 
 
     }
+
+    private void refreshList() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alarmAdapter.notifyDataSetChanged();
+                handler.postDelayed(this, 60000);
+            }
+        }, DateUtils.MINUTE_IN_MILLIS - System.currentTimeMillis() % DateUtils.MINUTE_IN_MILLIS);
+    }
+
+    private int getMissionIcon(String mission) {
+
+        switch (mission) {
+            case "math":
+                return R.drawable.ic_delete_red;
+            case "stringMatching":
+                return R.drawable.icon_add;
+            case "plugInCharger":
+                return R.drawable.icon_done;
+            default:
+                return R.drawable.icon_alarm_clock;
+        }
+    }
+
 }

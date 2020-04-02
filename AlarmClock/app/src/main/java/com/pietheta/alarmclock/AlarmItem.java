@@ -19,6 +19,23 @@ public class AlarmItem {
         return time;
     }
 
+    public int getHour() {
+        //06:45 PM
+        int hour = Integer.valueOf(time.substring(0, 2));
+        String ext = time.substring(6, 8); // AM PM
+
+        if (ext.equals("PM")) {
+            if (hour != 12) hour = hour + 12;
+        } else if (hour == 12) {//12am == 0
+            hour = 0;
+        }
+        return hour;
+    }
+
+    public int getMinute() {
+        return Integer.valueOf(time.substring(3, 5));
+    }
+
     public int getImageResource() {
         return imageResource;
     }
@@ -27,15 +44,8 @@ public class AlarmItem {
         return isSwitchOn;
     }
 
-    public void setSwitchState(){
+    public void setSwitchState(boolean isOn) {
 
-        if(isSwitchOn){
-            isSwitchOn=false;
-        }
-        else{
-            time ="OFF";
-            isSwitchOn=true;
-
-        }
+        isSwitchOn = !isOn;
     }
 }

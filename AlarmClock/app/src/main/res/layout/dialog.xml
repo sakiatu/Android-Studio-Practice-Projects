@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    app:cardCornerRadius="20dp">
+
+
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <TextView
+            android:id="@+id/dialogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:padding="4dp"
+            android:text="Title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColor"
+            android:textAlignment="center"/>
+
+         <TextView
+            android:id="@+id/dialogMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="message"
+            android:textSize="18sp"
+            android:textColor="@color/textColor"
+            android:textAlignment="center"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_margin="8dp">
+                <Button
+                    android:id="@+id/cancel"
+                    android:layout_width="144dp"
+                    android:layout_height="46dp"
+                    android:text="Cancel"
+                    android:layout_margin="16dp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/lightColor"
+                    android:textColor="@color/grayDark"
+                    android:background="@drawable/button_rounded"/>
+
+                <Button
+                    android:id="@+id/discard"
+                    android:layout_width="144dp"
+                    android:layout_height="46dp"
+                    android:layout_alignParentRight="true"
+                    android:text="Discard"
+                    android:layout_margin="16dp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/lightColor"
+                    android:textColor="@color/colorAccent"
+                    android:background="@drawable/button_rounded"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>

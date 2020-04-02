@@ -6,10 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".AddAlarmActivity">
 
-
     <include
         android:id="@+id/toolbar_addAlarm_id"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar" />
 
     <TimePicker
         android:id="@+id/timePicker"
@@ -18,52 +17,61 @@
         android:layout_below="@+id/toolbar_addAlarm_id"
         android:background="@color/white"
         android:numbersBackgroundColor="@color/white"
-        android:timePickerMode="clock"
-        android:layout_marginBottom="16dp"
-        />
+        android:timePickerMode="clock" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/timePicker"
+        android:background="@color/colorDivider"/>
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/white"
-        android:layout_below="@+id/timePicker">
+        android:layout_below="@+id/divider"
+        android:background="@color/white">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/setMission_layout"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:clickable="true">
+
                 <TextView
                     android:id="@+id/mission"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:text="@string/mission"
                     android:textColor="@color/textColor"
-                    android:textSize="20sp"
-                    android:layout_centerVertical="true"/>
+                    android:textSize="20sp" />
+
                 <ImageView
                     android:id="@+id/missionValue_image"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:layout_toLeftOf="@+id/missionValue_text"
-                    android:src="@drawable/icon_alarm_clock"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="24dp"/>
+                    android:layout_marginRight="24dp"
+                    android:layout_toLeftOf="@+id/missionValue_text"
+                    android:src="@drawable/icon_alarm_clock" />
+
                 <TextView
                     android:id="@+id/missionValue_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:text="Default"
-                    android:layout_alignParentRight="true"
                     android:textColor="@color/secondaryColor"
-                    android:textSize="18sp"
-                    android:layout_centerVertical="true"/>
+                    android:textSize="18sp" />
 
             </RelativeLayout>
 
@@ -72,25 +80,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:clickable="true">
+
                 <TextView
                     android:id="@+id/ringtone_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:text="Ringtone"
                     android:textColor="@color/textColor"
-                    android:textSize="20sp"
-                    android:layout_centerVertical="true"/>
+                    android:textSize="20sp" />
+
                 <TextView
                     android:id="@+id/ringtoneValue_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:text="Default"
-                    android:layout_alignParentRight="true"
                     android:textColor="@color/secondaryColor"
-                    android:textSize="18sp"
-                    android:layout_centerVertical="true"/>
+                    android:textSize="18sp" />
 
             </RelativeLayout>
 
@@ -99,25 +109,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:clickable="true">
+
                 <TextView
                     android:id="@+id/repeat_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:text="Repeat"
                     android:textColor="@color/textColor"
-                    android:textSize="20sp"
-                    android:layout_centerVertical="true"/>
+                    android:textSize="20sp" />
+
                 <TextView
                     android:id="@+id/repeatValue_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:text="Once"
-                    android:layout_alignParentRight="true"
                     android:textColor="@color/secondaryColor"
-                    android:textSize="18sp"
-                    android:layout_centerVertical="true"/>
+                    android:textSize="18sp" />
 
             </RelativeLayout>
 
@@ -126,5 +138,6 @@
 
 
     </ScrollView>
+
 
 </RelativeLayout>
