@@ -12,5 +12,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
+<style name="timePickerSpinnerMode" parent="@android:style/Widget.Material.TimePicker">
+    <item name="android:colorControlNormal">@color/colorAccent</item>
+    <item name="android:textSize">40sp</item>
+    <item name="android:fontFamily">@font/lato</item>
+</style>
 </resources>

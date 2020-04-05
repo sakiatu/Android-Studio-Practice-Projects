@@ -46,11 +46,13 @@ public class MainActivity extends AppCompatActivity {
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         ImageButton cancel = toolbar.findViewById(R.id.cancel);
         ImageButton delete = toolbar.findViewById(R.id.delete);
-        ImageButton done = toolbar.findViewById(R.id.done);
+        ImageButton countdown = toolbar.findViewById(R.id.done);
+        countdown.setImageResource(R.drawable.icon_countdown);//done icon converted to countdown
         title.setText(R.string.app_name);
         cancel.setVisibility(View.GONE);
-        done.setVisibility(View.GONE);
+        countdown.setVisibility(View.VISIBLE);
         delete.setVisibility(View.GONE);
+        countdown.setOnClickListener(v -> startActivity(new Intent(this, CountDown.class)));
     }
 
     public void loadData() {
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerAlarm = findViewById(R.id.alarmItemList);
         recyclerAlarm.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        alarmAdapter = new AlarmAdapter(this,alarmList);
+        alarmAdapter = new AlarmAdapter(this, alarmList);
         recyclerAlarm.setLayoutManager(layoutManager);
         recyclerAlarm.setAdapter(alarmAdapter);
 
