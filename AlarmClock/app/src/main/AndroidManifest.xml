@@ -9,8 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".CountDown"></activity>
+        <activity android:name=".journal.Journal"></activity>
+        <activity android:name=".CountDown" />
         <activity android:name=".Missions" />
+        <activity android:name=".journal.AddJournal" />
+        <activity android:name=".journal.Detail" />
+        <activity android:name=".journal.Edit" />
+        <activity android:name=".journal.Note" />
 
         <provider
             android:name=".AlarmProvider"

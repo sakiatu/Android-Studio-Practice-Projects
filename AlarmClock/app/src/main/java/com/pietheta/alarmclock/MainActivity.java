@@ -18,6 +18,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 
+import com.pietheta.alarmclock.journal.Journal;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,14 +47,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         ImageButton cancel = toolbar.findViewById(R.id.cancel);
-        ImageButton delete = toolbar.findViewById(R.id.delete);
+        ImageButton journal = toolbar.findViewById(R.id.delete);
         ImageButton countdown = toolbar.findViewById(R.id.done);
         countdown.setImageResource(R.drawable.icon_countdown);//done icon converted to countdown
+        journal.setImageResource(R.drawable.icon_journal);//delete icon converted to journal
         title.setText(R.string.app_name);
         cancel.setVisibility(View.GONE);
         countdown.setVisibility(View.VISIBLE);
-        delete.setVisibility(View.GONE);
+        journal.setVisibility(View.VISIBLE);
         countdown.setOnClickListener(v -> startActivity(new Intent(this, CountDown.class)));
+        journal.setOnClickListener(v -> startActivity(new Intent(this, Journal.class)));
     }
 
     public void loadData() {
@@ -96,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 alarmAdapter.notifyItemChanged(position);
             }
         });
-
-
     }
 
     private void refreshList() {
