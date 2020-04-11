@@ -1,4 +1,4 @@
-package com.pietheta.alarmclock;
+package com.pietheta.alarmclock.Alarm;
 
 import android.widget.TextView;
 import android.widget.Toast;

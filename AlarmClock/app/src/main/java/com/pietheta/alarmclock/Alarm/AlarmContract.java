@@ -1,4 +1,4 @@
-package com.pietheta.alarmclock;
+package com.pietheta.alarmclock.Alarm;
 
 import android.content.ContentResolver;
 import android.net.Uri;

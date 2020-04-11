@@ -10,20 +10,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".journal.Journal"></activity>
-        <activity android:name=".CountDown" />
-        <activity android:name=".Missions" />
+        <activity android:name=".countdown.CountDown" />
+        <activity android:name=".Alarm.Missions" />
         <activity android:name=".journal.AddJournal" />
         <activity android:name=".journal.Detail" />
         <activity android:name=".journal.Edit" />
         <activity android:name=".journal.Note" />
 
         <provider
-            android:name=".AlarmProvider"
+            android:name=".Alarm.AlarmProvider"
             android:authorities="com.pietheta.alarmclock.PROVIDER"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".AddAlarmActivity" />
+        <activity android:name=".Alarm.AddAlarmActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.pietheta.alarmclock;
+package com.pietheta.alarmclock.Alarm;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pietheta.alarmclock.R;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     Context context;

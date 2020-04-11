@@ -1,21 +1,13 @@
-package com.pietheta.alarmclock;
+package com.pietheta.alarmclock.Alarm;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.widget.NestedScrollView;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,10 +15,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import com.pietheta.alarmclock.BottomSheetDialog;
+import com.pietheta.alarmclock.R;
 
 import static com.pietheta.alarmclock.MainActivity.alarmAdapter;
 import static com.pietheta.alarmclock.MainActivity.alarmList;

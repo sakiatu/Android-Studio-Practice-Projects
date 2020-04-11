@@ -1,10 +1,13 @@
-package com.pietheta.alarmclock;
+package com.pietheta.alarmclock.Alarm;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.pietheta.alarmclock.Alarm.AlarmDbHelper;
+import com.pietheta.alarmclock.R;
 
 public class Missions extends AppCompatActivity {
 

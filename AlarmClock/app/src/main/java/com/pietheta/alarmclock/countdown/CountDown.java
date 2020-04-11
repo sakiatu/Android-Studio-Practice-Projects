@@ -1,4 +1,4 @@
-package com.pietheta.alarmclock;
+package com.pietheta.alarmclock.countdown;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.pietheta.alarmclock.R;
 
 import java.util.Locale;
 

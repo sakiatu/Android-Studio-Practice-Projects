@@ -4,19 +4,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int STACK = 0;
+    private static final int QUEUE = 1;
     ListView itemList, historyList;
     ArrayList items, history;
-    EditText value;
+    String[] quackItems= {"Stack","Queue"};
+    EditText editText;
     ArrayAdapter mainAdapter, historyAdapter;
+    Spinner quackSpinner;
+    Quack quack;
+    ArrayAdapter<CharSequence> spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +34,30 @@ public class MainActivity extends AppCompatActivity {
         history = new ArrayList<String>();
         setViews();
         setLists();
+        setSpinner();
+    }
 
+    private void setSpinner() {
+        quackSpinner = findViewById(R.id.spinner);
+        spinnerAdapter = new ArrayAdapter<CharSequence>(this,R.layout.spinner_layout,R.id.item_text,quackItems);
+       // spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+      //  spinnerAdapter.setDropDownViewResource(R.layout.spinner_layout);
+        // Associate the ArrayAdapter with the Spinner.
+        quackSpinner.setAdapter(spinnerAdapter);
+        // Set the default selection of the quackSpinner to be "add".
+        quackSpinner.setSelection(spinnerAdapter.getPosition("Stack"));
+        quackSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setQuack(position);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                setQuack(STACK);
+
+            }
+        });
     }
 
     private void setLists() {
@@ -40,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private void setViews() {
         itemList = findViewById(R.id.mainList);
         historyList = findViewById(R.id.historyList);
-        value = findViewById(R.id.value);
+        editText = findViewById(R.id.value);
         findViewById(R.id.push).setOnClickListener(this::onClick);
         findViewById(R.id.pop).setOnClickListener(this::onClick);
         findViewById(R.id.peek).setOnClickListener(this::onClick);
@@ -50,75 +80,60 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onClick(View view) {
-        if (view.getId() == R.id.push) push();
-        if (view.getId() == R.id.pop) pop();
-        if (view.getId() == R.id.peek) peek();
-        if (view.getId() == R.id.empty) emptyCheck();
-        if (view.getId() == R.id.size) showSize();
-        if (view.getId() == R.id.clear) clear();
-    }
-
-    private void showSize() {
-        history.add("size: " + mainAdapter.getCount());
-        historyAdapter.notifyDataSetChanged();
-
-    }
-
-    private void emptyCheck() {
-        if (mainAdapter.getCount() != 0) {
-
-            history.add("Stack is not empty");
-            historyAdapter.notifyDataSetChanged();
-        } else {
-            history.add("Stack is empty");
-            historyAdapter.notifyDataSetChanged();
+        if (view.getId() == R.id.push) {
+            String string = getEditTextValue();
+            if (string.equals("")) {
+                msg("Input text!");
+            } else {
+                quack.push(string);
+                editText.setText("");
+                itemList.setTranscriptMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
+            }
         }
+        if (view.getId() == R.id.pop) {
+            if (mainAdapter.getCount() != 0) {
+                quack.pop();
+                refreshList();
+            } else
+                msg("Quack is empty");
+        }
+        if (view.getId() == R.id.peek) {
+            if (quack.peek()) refreshList();
+            else msg("Quack is empty\nNo peek editText");
+        }
+        if (view.getId() == R.id.empty) {
+            quack.emptyCheck();
+        }
+        if (view.getId() == R.id.size) {
+            quack.showSize();
+        }
+        if (view.getId() == R.id.clear) {
+            if (historyAdapter.getCount() != 0) {
+                quack.clear();
+                msg("Quack and history have been cleared");
+            } else
+                msg("Nothing to clear");
+        }
+        refreshList();
     }
 
-    private void peek() {
-        if (mainAdapter.getCount() != 0) {
-
-            history.add("peek: " + items.get(0));
-            historyAdapter.notifyDataSetChanged();
-        } else
-            msg("Stack is empty\nNo peek value");
-    }
-
-    private void push() {
-        String string = value.getText().toString();
-        if (!string.equals("")) {
-            items.add(string);
-            history.add("\"" + string + "\"" + " pushed");
-            itemList.setTranscriptMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
-            mainAdapter.notifyDataSetChanged();
-            historyAdapter.notifyDataSetChanged();
-            value.setText("");
-        } else msg("value required");
-    }
-
-    private void pop() {
-        if (mainAdapter.getCount() != 0) {
-            history.add("\"" + items.get(0) + "\"" + " popped");
-            items.remove(0);
-            mainAdapter.notifyDataSetChanged();
-            historyAdapter.notifyDataSetChanged();
-        } else
-            msg("Stack is empty");
-    }
-
-
-    private void clear() {
-        if (historyAdapter.getCount() != 0) {
-            history.clear();
-            items.clear();
-            mainAdapter.notifyDataSetChanged();
-            historyAdapter.notifyDataSetChanged();
-            msg("Stack and history have been cleared");
-        } else
-            msg("Nothing to clear");
+    private void refreshList() {
+        mainAdapter.notifyDataSetChanged();
+        historyAdapter.notifyDataSetChanged();
     }
 
     private <M> void msg(M msg) {
         Toast.makeText(this, "" + msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private String getEditTextValue() {
+        return editText.getText().toString();
+    }
+
+    void setQuack(int QUACK) {
+        if (QUACK == STACK)
+            quack = new MyStack(items, history);
+        else if (QUACK == QUEUE)
+            quack = new MyQueue(items, history);
     }
 }

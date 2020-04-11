@@ -1,4 +1,4 @@
-package com.pietheta.alarmclock;
+package com.pietheta.alarmclock.Alarm;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -7,6 +7,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+
+import com.pietheta.alarmclock.Alarm.AlarmContract;
+import com.pietheta.alarmclock.Alarm.AlarmDbHelper;
 
 public class AlarmProvider extends ContentProvider {
     public AlarmProvider() {

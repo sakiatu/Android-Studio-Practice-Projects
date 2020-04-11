@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Quacks</string>
+
+    <string-array name="quack_options">
+        <item>Stack</item>
+        <item>Queue</item>
+    </string-array>
 </resources>
