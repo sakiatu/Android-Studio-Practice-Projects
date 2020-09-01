@@ -55,6 +55,7 @@ public class Detail extends AppCompatActivity {
             Intent i = new Intent(this,Edit.class);
             i.putExtra("ID",id);
             startActivity(i);
+            finish();
         });
         cancel.setOnClickListener(v->finish());
     }

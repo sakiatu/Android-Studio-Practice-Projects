@@ -32,9 +32,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     public OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void setOnItemClick(int position);
 
-        void onClickSwitch(int position);
+        void setOnSwitchClick(int position);
 
     }
 
@@ -61,7 +61,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 if (listener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(position);
+                        listener.setOnItemClick(position);
                     }
                 }
             });
@@ -70,7 +70,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 if (listener != null) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        listener.onClickSwitch(position);
+                        listener.setOnSwitchClick(position);
 
                     }
                 }
@@ -87,7 +87,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View alarmItemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.alarm_item, parent, false);
-
         return new AlarmViewHolder(alarmItemView, listener);
     }
 

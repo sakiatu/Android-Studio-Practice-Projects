@@ -85,8 +85,8 @@ public class Edit extends AppCompatActivity {
                 Note note = new Note(nId, title, content, getCurrentDate(), getCurrentTime());
                 SimpleDatabase sDB = new SimpleDatabase(getApplicationContext());
                 long id = sDB.editNote(note);
-                gotoJournal();
                 Toast.makeText(this, "Note Edited", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
         cancel.setOnClickListener(v -> {
@@ -96,9 +96,6 @@ public class Edit extends AppCompatActivity {
 
     }
 
-    private void gotoJournal() {
-        startActivity(new Intent(this, Journal.class));
-    }
     private String getCurrentTime() {
 
         Integer hour = calendar.get(Calendar.HOUR_OF_DAY);

@@ -3,19 +3,19 @@ package apps.simplee.fragments;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 public class MyFragment extends Fragment {
 
     public static final String KEY_MY_DATA = "my_data";
 
-    public static MyFragment getInstance(String my_data) {
+    public static androidx.fragment.app.Fragment getInstance(String my_data) {
         MyFragment fragment = new MyFragment();
         //create bundle to store arguments
         Bundle args = new Bundle();

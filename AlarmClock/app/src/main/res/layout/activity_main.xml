@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@color/white"
+        tools:listitem="@layout/alarm_item"
         android:layout_below="@+id/toolbar_mainActivity_id"/>
 
 

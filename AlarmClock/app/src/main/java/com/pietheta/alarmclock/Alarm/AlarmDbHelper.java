@@ -23,7 +23,8 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
     public static final String KEY_RINGTONE = "ringtone";
     public static final String KEY_ACTIVE = "active";
     public static final String KEY_REPEAT = "repeat";
-    private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
+    private static final String CREATE_TABLE =
+            "CREATE TABLE " + TABLE_NAME + "(" +
             ID + " integer primary key , " +
             KEY_TIME + " text not null, " +
             KEY_MISSION + " text not null, " +

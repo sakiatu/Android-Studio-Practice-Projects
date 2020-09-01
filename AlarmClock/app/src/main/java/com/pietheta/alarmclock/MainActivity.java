@@ -91,14 +91,14 @@ public class MainActivity extends AppCompatActivity {
 
         alarmAdapter.setOnItemClickListener(new AlarmAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void setOnItemClick(int position) {
                 Intent intent = new Intent(getApplicationContext(), AddAlarmActivity.class);
                 intent.putExtra("position", position);
                 startActivity(intent);
             }
 
             @Override
-            public void onClickSwitch(int position) {
+            public void setOnSwitchClick(int position) {
                 boolean isOn = alarmList.get(position).isSwitchOn();
                 alarmList.get(position).setSwitchState(isOn);
                 helper.updateActive(position, !isOn);
