@@ -21,7 +21,7 @@ public class Note {
         this.date = date;
         this.time = time;
     }
-    Note(){
+public     Note(){
         // empty constructor
     }
 
