@@ -7,8 +7,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.pietheta.alarmclock.Alarm.AlarmContract;
-
 public class AlarmDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "alarm.db";
@@ -19,18 +17,21 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
     public static final String ID = "_id";
 
     public static final String KEY_TIME = "time";
-    public static final String KEY_MISSION = "mission";
-    public static final String KEY_RINGTONE = "ringtone";
+    public static final String KEY_RINGTONE = "mission";
+    public static final String KEY_RINGTONE_URI = "ringtone";
     public static final String KEY_ACTIVE = "active";
-    public static final String KEY_REPEAT = "repeat";
+    public static final String KEY_DATE = "date";
+    public static final String KEY_LABEL = "label";
     private static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + "(" +
-            ID + " integer primary key , " +
-            KEY_TIME + " text not null, " +
-            KEY_MISSION + " text not null, " +
-            KEY_RINGTONE + " text not null, " +
-            KEY_REPEAT + " text not null, " +
-            KEY_ACTIVE + " text not null " + ");";
+                    ID + " integer primary key , " +
+                    KEY_TIME + " text not null, " +
+                    KEY_RINGTONE + " text not null, " +
+                    KEY_RINGTONE_URI + " text not null, " +
+                    KEY_DATE + " text not null, " +
+                    KEY_ACTIVE + " text not null, " +
+                    KEY_LABEL + " text not null " +
+                    ");";
 
     private static final String DROP_TABLE = " DROP TABLE IF EXISTS " + AlarmContract.AlarmEntry.TABLE_NAME;
     private static final String SELECT_ALL = " SELECT * FROM " + TABLE_NAME;
@@ -63,16 +64,17 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
 
     //*****************************     All methods     *************************//
 
-    public long addAlarm(String alarmTime, String mission, String ringtone, String repeat, String active) {
+    public long addAlarm(String alarmTime, String mission, String ringtone, String repeat, String active, String label) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(KEY_TIME, alarmTime);
-        contentValues.put(KEY_MISSION, mission);
-        contentValues.put(KEY_RINGTONE, ringtone);
-        contentValues.put(KEY_REPEAT, repeat);
+        contentValues.put(KEY_RINGTONE, mission);
+        contentValues.put(KEY_RINGTONE_URI, ringtone);
+        contentValues.put(KEY_DATE, repeat);
         contentValues.put(KEY_ACTIVE, active);
+        contentValues.put(KEY_LABEL, label);
 
         long n = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
         sqLiteDatabase.close();
@@ -81,35 +83,24 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
 
 
     //update data
-    public long updateAlarm(int position, String alarmTime, String mission, String ringtone, String repeat, String active) {
+    public long updateAlarm(int position, String alarmTime, String ringtone, String ringtoneUri, String repeat, String active, String label) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(KEY_TIME, alarmTime);
-        contentValues.put(KEY_MISSION, mission);
-        contentValues.put(KEY_RINGTONE, ringtone);
-        contentValues.put(KEY_REPEAT, repeat);
+        if (ringtone != null && ringtoneUri != null) {
+            contentValues.put(KEY_RINGTONE, ringtone);
+            contentValues.put(KEY_RINGTONE_URI, ringtoneUri);
+        }
+        contentValues.put(KEY_DATE, repeat);
         contentValues.put(KEY_ACTIVE, active);
+        contentValues.put(KEY_LABEL, label);
 
         int n = sqLiteDatabase.update(TABLE_NAME, contentValues, ID + "=?", new String[]{getId(position)});
         sqLiteDatabase.close();
         return n;
 
     }
-
-
-  /*  public long updatePresent(String id,String present)
-    {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(ID,id);
-        contentValues.put(PRESENT,present);
-
-        long x = sqLiteDatabase.update(TABLE_NAME,contentValues,ID+"=?",new String[]{id});
-        return x;
-    }
-*/
 
     //delete data
     public int deleteAlarm(int position) {
@@ -163,7 +154,7 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(KEY_REPEAT, repeat_type);
+        contentValues.put(KEY_DATE, repeat_type);
 
         sqLiteDatabase.update(TABLE_NAME, contentValues, ID + "=?", new String[]{getId(position)});
         sqLiteDatabase.close();
@@ -179,22 +170,22 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         return time;
     }
 
-    public String getMissionType(int position) {
+    public String getRingtoneName(int position) {
         String mission = null;
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("select * from AlarmList limit 1 offset " + position, null);
         if (cursor.moveToFirst())
-            mission = cursor.getString(cursor.getColumnIndex(KEY_MISSION));
+            mission = cursor.getString(cursor.getColumnIndex(KEY_RINGTONE));
         return mission;
 
     }
 
-    public String getRingtone(int position) {
+    public String getRingtoneUri(int position) {
         String ringtone = null;
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("select * from AlarmList limit 1 offset " + position, null);
         if (cursor.moveToFirst())
-            ringtone = cursor.getString(cursor.getColumnIndex(KEY_RINGTONE));
+            ringtone = cursor.getString(cursor.getColumnIndex(KEY_RINGTONE_URI));
         return ringtone;
     }
 
@@ -203,8 +194,17 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("select * from AlarmList limit 1 offset " + position, null);
         if (cursor.moveToFirst())
-            repeatType = cursor.getString(cursor.getColumnIndex(KEY_REPEAT));
+            repeatType = cursor.getString(cursor.getColumnIndex(KEY_DATE));
         return repeatType;
+    }
+
+    public String getLabel(int position) {
+        String label = null;
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("select * from AlarmList limit 1 offset " + position, null);
+        if (cursor.moveToFirst())
+            label = cursor.getString(cursor.getColumnIndex(KEY_LABEL));
+        return label;
     }
 
     public String getActiveState(int position) {
@@ -212,7 +212,7 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("select * from AlarmList limit 1 offset " + position, null);
         if (cursor.moveToFirst())
-            activeState= cursor.getString(cursor.getColumnIndex(KEY_ACTIVE));
+            activeState = cursor.getString(cursor.getColumnIndex(KEY_ACTIVE));
         return activeState;
     }
 }

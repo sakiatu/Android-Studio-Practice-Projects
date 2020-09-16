@@ -1,14 +1,7 @@
 package com.pietheta.alarmclock;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-
 import android.content.Intent;
-
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,11 +10,18 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.pietheta.alarmclock.Alarm.AddAlarmActivity;
 import com.pietheta.alarmclock.Alarm.AlarmAdapter;
 import com.pietheta.alarmclock.Alarm.AlarmDbHelper;
 import com.pietheta.alarmclock.Alarm.AlarmItem;
+import com.pietheta.alarmclock.Alarm.Ringtone;
+import com.pietheta.alarmclock.Alarm.TimeFormatter;
 import com.pietheta.alarmclock.countdown.CountDown;
 import com.pietheta.alarmclock.journal.Journal;
 
@@ -29,10 +29,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public static ArrayList<AlarmItem> alarmList = new ArrayList<>();
-    private RecyclerView recyclerAlarm;
     public static AlarmAdapter alarmAdapter;
     private RecyclerView.LayoutManager layoutManager;
     AlarmDbHelper helper = new AlarmDbHelper(this);
+    Ringtone ringtone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +43,10 @@ public class MainActivity extends AppCompatActivity {
         loadData();
         setList();
         refreshList();
-        findViewById(R.id.fab_main).setOnClickListener(v -> startActivity(new Intent(this, AddAlarmActivity.class)));
+        findViewById(R.id.fab_main)
+                .setOnClickListener(v -> startActivity(new Intent(this, AddAlarmActivity.class)));
 
-
+        ringtone = new Ringtone(this);
     }
 
     private void setToolbar() {
@@ -70,19 +71,18 @@ public class MainActivity extends AppCompatActivity {
 
         while (cursor.moveToNext()) {
             String time = cursor.getString(cursor.getColumnIndex(AlarmDbHelper.KEY_TIME));
+            String date = cursor.getString(cursor.getColumnIndex(AlarmDbHelper.KEY_DATE));
             String active = cursor.getString(cursor.getColumnIndex(AlarmDbHelper.KEY_ACTIVE));
-            String mission = cursor.getString(cursor.getColumnIndex(AlarmDbHelper.KEY_MISSION));
 
-            int mission_icon = getMissionIcon(mission);
             boolean isOn = active.equals("true");
 
-            alarmList.add(new AlarmItem(time, mission_icon, isOn));
+            alarmList.add(new AlarmItem(time, date, isOn));
         }
 
     }
 
     private void setList() {
-        recyclerAlarm = findViewById(R.id.alarmItemList);
+        RecyclerView recyclerAlarm = findViewById(R.id.alarmItemList);
         recyclerAlarm.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         alarmAdapter = new AlarmAdapter(this, alarmList);
@@ -113,23 +113,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 alarmAdapter.notifyDataSetChanged();
+                for (int i = 0; i < alarmList.size(); i++) {
+                    if (alarmList.get(i).isSwitchOn() &&
+                            alarmList.get(i).getTime().equals(TimeFormatter.getCurrentTime()) &&
+                            alarmList.get(i).getDate().equals(TimeFormatter.getCurrentDate())) {
+                        ringtone.setRingtone(helper.getRingtoneUri(i));
+                        ringtone.play();
+                        alarmList.get(i).setSwitchState(true);
+                        helper.updateActive(i, false);
+                        alarmAdapter.notifyItemChanged(i);
+                        showAlarmDialog(i);
+                        break;
+                    }
+                }
                 handler.postDelayed(this, 60000);
             }
         }, DateUtils.MINUTE_IN_MILLIS - System.currentTimeMillis() % DateUtils.MINUTE_IN_MILLIS);
     }
 
-    private int getMissionIcon(String mission) {
-
-        switch (mission) {
-            case "math":
-                return R.drawable.ic_delete_red;
-            case "stringMatching":
-                return R.drawable.icon_add;
-            case "plugInCharger":
-                return R.drawable.icon_done;
-            default:
-                return R.drawable.icon_alarm_clock;
-        }
+    private void showAlarmDialog(int i) {
+        String time = alarmList.get(i).getTime();
+        String label = helper.getLabel(i);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(time)
+                .setMessage(label)
+                .setPositiveButton("Stop", (a, b) -> ringtone.stop())
+                .setCancelable(false).create().show();
     }
-
 }

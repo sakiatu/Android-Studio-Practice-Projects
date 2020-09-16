@@ -1,17 +1,14 @@
 package com.pietheta.alarmclock.Alarm;
 
-import android.widget.TextView;
-import android.widget.Toast;
-
 public class AlarmItem {
 
     private String time;
-    private int imageResource;
+    private String date;
     private boolean isSwitchOn;
 
-    public AlarmItem(String time, int imageResource, boolean isSwitchOn) {
+    public AlarmItem(String time, String date, boolean isSwitchOn) {
         this.time = time;
-        this.imageResource = imageResource;
+        this.date = date;
         this.isSwitchOn = isSwitchOn;
     }
 
@@ -21,10 +18,10 @@ public class AlarmItem {
 
     public int getHour() {
         //06:45 PM
-        int hour = Integer.valueOf(time.substring(0, 2));
+        int hour = Integer.parseInt(time.substring(0, 2));
         String ext = time.substring(6, 8); // AM PM
 
-        if (ext.equals("PM")) {
+        if (ext.equals("pm")) {
             if (hour != 12) hour = hour + 12;
         } else if (hour == 12) {//12am == 0
             hour = 0;
@@ -33,11 +30,7 @@ public class AlarmItem {
     }
 
     public int getMinute() {
-        return Integer.valueOf(time.substring(3, 5));
-    }
-
-    public int getImageResource() {
-        return imageResource;
+        return Integer.parseInt(time.substring(3, 5));
     }
 
     public boolean isSwitchOn() {
@@ -45,7 +38,10 @@ public class AlarmItem {
     }
 
     public void setSwitchState(boolean isOn) {
-
         isSwitchOn = !isOn;
+    }
+
+    public String getDate() {
+        return date;
     }
 }

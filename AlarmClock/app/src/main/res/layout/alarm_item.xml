@@ -33,14 +33,6 @@
                     android:textColor="@color/textColor"
                     android:textSize="40sp" />
 
-                <ImageView
-                    android:id="@+id/mission_img"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/icon_alarm_clock" />
-
             </LinearLayout>
 
 
@@ -49,7 +41,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Alarm in 6 hours 23 minutes"
+                android:text="24.09.2020 | this is a test message for my alarm row"
+                android:maxLength="45"
                 android:textColor="@color/secondaryColor"
                 android:textSize="15sp" />
         </LinearLayout>

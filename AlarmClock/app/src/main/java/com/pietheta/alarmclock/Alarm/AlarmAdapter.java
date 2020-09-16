@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -23,7 +22,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     AlarmDbHelper helper;
     Calendar currentTime;
 
-    public AlarmAdapter( Context context,ArrayList<AlarmItem> alarmList) {
+    public AlarmAdapter(Context context, ArrayList<AlarmItem> alarmList) {
         this.alarmList = alarmList;
         this.context = context;
         helper = new AlarmDbHelper(context);
@@ -47,14 +46,12 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         TextView time;
         TextView remainingTime;
-        ImageView missionImg;
         Switch alarmSwitch;
 
         public AlarmViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             time = itemView.findViewById(R.id.alarm_time);
             remainingTime = itemView.findViewById(R.id.remaining_time);
-            missionImg = itemView.findViewById(R.id.mission_img);
             alarmSwitch = itemView.findViewById(R.id.switch_alarm);
 
             itemView.setOnClickListener(v -> {
@@ -96,18 +93,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         AlarmItem currentItem = alarmList.get(position);
         holder.time.setText(currentItem.getTime());
         holder.time.setTextColor(getTextColor(position));
-        holder.remainingTime.setText(getRemainingTime(position));
-        holder.missionImg.setImageResource(currentItem.getImageResource());
-        holder.missionImg.setColorFilter(getImageColor(position));
+        holder.remainingTime.setText(helper.getRepeatType(position) + " | " + helper.getLabel(position));
+//        holder.remainingTime.setText(getRemainingTime(position));
         holder.alarmSwitch.setChecked(currentItem.isSwitchOn());
-
-    }
-
-    private int getImageColor(int position) {
-        if (alarmList.get(position).isSwitchOn())
-            return context.getResources().getColor(R.color.colorAccent);
-        else
-            return context.getResources().getColor(R.color.grayColor);
     }
 
     private int getTextColor(int position) {
@@ -147,7 +135,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             } else {
                 hour = 24 + alarmHour - currentHour;
             }
-
             StringBuilder builder = new StringBuilder();
             builder.append("Alarm in ");
             if (hour == 1) builder.append(hour + " hour ");
